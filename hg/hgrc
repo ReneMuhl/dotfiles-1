@@ -1,19 +1,20 @@
 [ui]
-username = Mark Nichols <mark@zanshin.net>
-ignore = ${HOME}/.hgignore_global
+username = René Muhl
+ssh = ssh -C
+[diff]
+git = True
+showfunc = True
 [extensions]
-convert =
-[merge-tools]
-sourcetreemerge.gui=False
-sourcetreebulkmerge.gui=False
-sourcetreemerge.binary=False
-sourcetreebulkmerge.executable=/Users/mark/Applications/SourceTree.app/Contents/Resources/hg-merge.sh
-sourcetreemerge.args=$local $other -ancestor $base -merge $output
-sourcetreemerge.checkconflicts=True
-sourcetreemerge.premerge=True
-sourcetreemerge.executable=/Users/mark/Applications/SourceTree.app/Contents/Resources/opendiff-w.sh
-sourcetreebulkmerge.premerge=False
-sourcetreebulkmerge.binary=True
-[extdiff]
-cmd.sourcetreediff=opendiff
-opts.sourcetreediff=
+flow = $HOME/.dotfiles/hg/hgext/hgflow.py
+color =
+graphlog =
+histedit =
+mq =
+rebase =
+pager=
+progress =
+prompt = $HOME/.dotfiles/hg/hgext/hg-prompt/prompt.py
+shelve =
+[pager]
+pager = LESS='FRX' less
+attend = annotate, log, diff, heads, help, in, incoming, out, outgoing, status, qdiff

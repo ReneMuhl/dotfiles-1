@@ -1,11 +1,13 @@
+if [ "x$OH_MY_ZSH_HG" = "x" ]; then
+    OH_MY_ZSH_HG="hg"
+fi
+
 function virtualenv_info {
-    [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
+    #[ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
 }
 
 function prompt_char {
-    git branch >/dev/null 2>/dev/null && echo '±' && return
-    hg root >/dev/null 2>/dev/null && echo '☿' && return
-    echo '○'
+    echo '▶'
 }
 
 function box_name {
@@ -33,6 +35,10 @@ GIT_PROMPT_STAGED="%{$fg_bold[green]%}s%{$reset_color%}"
 # Show Git branch/tag, or name-rev if on detached head
 function parse_git_branch() {
   (git symbolic-ref -q HEAD || git name-rev --name-only --no-undefined --always HEAD) 2> /dev/null
+}
+
+function parse_hg_branch() {
+  (hg branch | head -n 1) 2> /dev/null 
 }
 
 # Show different symbols as appropriate for various Git repository states
@@ -81,42 +87,32 @@ function git_prompt_string() {
   [ -n "$git_where" ] && echo "on %{$fg[blue]%}${git_where#(refs/heads/|tags/)}%{$reset_color%}$(parse_git_state)"
 }
 
+function hg_prompt_info() {
+    $OH_MY_ZSH_HG prompt --angle-brackets "\
+< on %{$fg[magenta]%}<branch>%{$reset_color%}>\
+< at %{$fg[yellow]%}<tags|%{$reset_color%}, %{$fg[yellow]%}>%{$reset_color%}>\
+%{$fg[green]%}<status|modified|unknown><update>%{$reset_color%}<
+patches: <patches|join( → )|pre_applied(%{$fg[yellow]%})|post_applied(%{$reset_color%})|pre_unapplied(%{$fg_bold[black]%})|post_unapplied(%{$reset_color%})>>" 2>/dev/null
+}
+
 # determine Ruby version whether using RVM or rbenv
 # the chpwd_functions line cause this to update only when the directory changes
-function _update_ruby_version() {
-    typeset -g ruby_version=''
-    if which rvm-prompt &> /dev/null; then
-      # ruby_version="$(rvm-prompt i v g)"
-      ruby_version="$(rvm-prompt i v p g)"
-    else
-      if which rbenv &> /dev/null; then
-        ruby_version="$(rbenv version | sed -e "s/ (set.*$//")"
-      else
-        if which ruby &> /dev/null; then
-          ruby_version="$(ruby --version | awk '{print $2}')"
-        fi
-      fi
-    fi
-}
+#function _update_ruby_version() {
+#    typeset -g ruby_version=''
+#    if which rvm-prompt &> /dev/null; then
+#      # ruby_version="$(rvm-prompt i v g)"
+#      ruby_version="$(rvm-prompt i v p g)"
+#    else
+#      if which rbenv &> /dev/null; then
+#        ruby_version="$(rbenv version | sed -e "s/ (set.*$//")"
+#      else
+#        if which ruby &> /dev/null; then
+#          ruby_version="$(ruby --version | awk '{print $2}')"
+#        fi
+#      fi
+#    fi
+#}
 
-# determine if we are in a Chef context and display it in our prompt
-function chef_prompt() {
-#  [ pwd = '^.*est-chef' ] && echo "[chef: est]"
-#  [ pwd = '^.*ome-chef' ] && echo "[chef: ome]"
-#  [ pwd = '^.*opscode-chef' ] && echo "[chef: opscode]"
-#  [ pwd = '^.*zanshin-chef' ] && echo "[chef: zanshin]"
-
-#  if [[ "`pwd | sed -e 's/.*-chef.*//'`" == "" ]]; then
-#    echo "[chef: `pwd | sed -e 's/.*\/\([a-z0-9]*\)-chef.*/\1/'`]"
-#  fi
-
-#  if [[ "` pwd | sed -e 's/.*\/chef.*//'`" == "" ]]; then
-#    echo "[`pwd | sed -e 's/.*\/chef\/\([a-z0-9]*\)/\1/'`]"
-#  fi
-}
-
-# list of functions to call for each directory change
-chpwd_functions+=(_update_ruby_version)
 
 function current_pwd {
   echo $(pwd | sed -e "s,^$HOME,~,")
@@ -124,7 +120,7 @@ function current_pwd {
 
 
 PROMPT='
-${PR_GREEN}%n%{$reset_color%} %{$FG[239]%}at%{$reset_color%} ${PR_BOLD_BLUE}$(box_name)%{$reset_color%} %{$FG[239]%}in%{$reset_color%} ${PR_BOLD_YELLOW}$(current_pwd)%{$reset_color%} $(git_prompt_string) 
+${PR_GREEN}%n%{$reset_color%} %{$FG[239]%}at%{$reset_color%} ${PR_BOLD_BLUE}$(box_name)%{$reset_color%} %{$FG[239]%}in%{$reset_color%} ${PR_BOLD_YELLOW}$(current_pwd)%{$reset_color%} $(hg_prompt_info) $(git_prompt_string) 
 $(prompt_char) '
 
 export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color [(y)es (n)o (a)bort (e)dit]? "

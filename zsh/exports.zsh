@@ -7,9 +7,9 @@ export PATH=$PATH:/usr/local/sbin:$HOME/bin
 typeset -U PATH
 
 # Set default console Java to 1.6
-if [[ $IS_MAC -eq 1 ]]; then
-    export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home
-fi
+#if [[ $IS_MAC -eq 1 ]]; then
+#    export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home
+#fi
 
 # Setup terminal, and turn on colors
 export TERM=xterm-256color
@@ -39,7 +39,7 @@ export LANG=en_US.UTF-8
 
 # Virtual Environment Stuff
 export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/Projects/django
+#export PROJECT_HOME=$HOME/Projects/django
 if [[ $HAS_VIRTUALENV -eq 1 ]]; then
     source /usr/local/bin/virtualenvwrapper.sh
 fi
