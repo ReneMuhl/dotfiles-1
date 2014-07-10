@@ -39,7 +39,6 @@ export LANG=en_US.UTF-8
 
 # Virtual Environment Stuff
 export WORKON_HOME=$HOME/.virtualenvs
+#export PROJECT_HOME=$HOME/
 #export PROJECT_HOME=$HOME/Projects/django
-if [[ $HAS_VIRTUALENV -eq 1 ]]; then
-    source /usr/local/bin/virtualenvwrapper.sh
-fi
+source /usr/local/bin/virtualenvwrapper.sh
